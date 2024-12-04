@@ -7,8 +7,11 @@ const login = async (req, res) => {
     console.log(token)
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
-      
+
+      httpOnly: true,
       secure: true,
+      sameSite: "none",
+      
     });
     res.send(user);
 
