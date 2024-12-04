@@ -12,7 +12,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 
 app.use(cors({
-  origin: "https://smartcam.vercel.app",
+  origin: ["https://smartcam.vercel.app", "http://localhost:3000"],
   credentials: true,
 }));
 app.use(express.json());
