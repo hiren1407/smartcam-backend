@@ -22,6 +22,10 @@ app.use(cookieParser());
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
 app.use("/api/auth", auth);
 app.use("/api/admin", admin);
 app.use('/api/faculty', faculty);
