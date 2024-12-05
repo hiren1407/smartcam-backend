@@ -47,7 +47,7 @@ router.post("/register", async (req, res) => {
 router.get('/profile', verifyToken, roleCheck(['faculty']), async (req, res) => {
   try {
     // Fetch the user's profile, ensuring the user is a faculty member
-    const facultyProfile = await User.findOne({ _id: req.user.id, role: 'faculty' });
+    const facultyProfile = await User.findOne({ fid: req.user.id, role: 'faculty' });
 
     if (!facultyProfile) {
       return res.status(404).json({ message: 'Faculty profile not found' });
