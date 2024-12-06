@@ -89,18 +89,20 @@ router.put('/profile', verifyToken, roleCheck(['faculty']), async (req, res) => 
 });
 
 // Get attendance for a particular faculty by their faculty_id
-router.get('/:faculty_id/attendance', verifyToken, roleCheck(['faculty', 'admin']), async (req, res) => {
+router.get('/:faculty_id/attendanceAndLeave', verifyToken, roleCheck(['faculty', 'admin']), async (req, res) => {
   try {
     const facultyId = req.params.faculty_id;
 
-    // Query for finding attendance records for the given faculty_id
+    // Query for finding attendance and leave records for the given faculty_id
     const attendanceRecords = await facultyAttendance.find({ faculty_id: facultyId });
 
-    if (attendanceRecords.length === 0) {
-      return res.status(404).json({ message: 'No attendance records found for this faculty' });
-    }
+    const leaveDetails = await leaveApplication.find({ faculty_id: facultyId });
 
-    res.json(attendanceRecords);
+
+    res.json({
+      attendanceRecords,
+      leaveDetails
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
