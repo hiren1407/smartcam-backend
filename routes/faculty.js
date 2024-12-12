@@ -19,7 +19,6 @@ router.post("/register", async (req, res) => {
      
 
       newUser = new User({
-        profilePicturePath: imgPath ? `/uploads/${req.files[0].filename}` : "",
         name: req.body.name,
         password: req.body.password,
         email: req.body.email,
