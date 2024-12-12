@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 
 const leaveApplicationSchema = new Schema({
   faculty_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
+    type: String,
     required: true
   },
   fromDate: {
