@@ -46,6 +46,24 @@ router.get('/faculty', verifyToken, roleCheck(['admin']), async (req, res) => {
   }
 });
 
+// Get attendance and leave for a particular faculty by their faculty_id
+router.get('/:faculty_id/attendanceAndLeave', verifyToken, roleCheck(['admin']), async (req, res) => {
+  try {
+    const facultyId = req.params.faculty_id;
+
+    // Query for finding attendance and leave records for the given faculty_id
+    const attendanceRecords = await facultyAttendance.find({ faculty_id: facultyId }).sort({ attendanceDate: -1 });
+    const leaveDetails = await leaveApplication.find({ faculty_id: facultyId }).sort({ fromDate: -1 });
+
+    res.json({
+      attendanceRecords,
+      leaveDetails
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Delete a faculty by their faculty_id
 router.delete('/faculty/:faculty_id', verifyToken, roleCheck(['admin']), async (req, res) => {
   try {
