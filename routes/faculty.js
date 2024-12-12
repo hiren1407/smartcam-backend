@@ -119,7 +119,7 @@ router.get('/:faculty_id/attendanceAndLeave', verifyToken, roleCheck(['faculty',
     const facultyId = req.params.faculty_id;
 
     // Convert facultyId to ObjectId
-    const objectId = mongoose.Types.ObjectId(facultyId);
+    const objectId = new mongoose.Types.ObjectId(facultyId);
 
     // Query for finding attendance and leave records for the given faculty_id
     const attendanceRecords = await facultyAttendance.find({ faculty_id: objectId }).sort({ attendanceDate: -1 });
