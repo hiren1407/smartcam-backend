@@ -75,7 +75,7 @@ router.delete('/faculty/:faculty_id', verifyToken, roleCheck(['admin']), async (
 // Get all pending leave applications
 router.get('/leave/pending', verifyToken, roleCheck(['admin']), async (req, res) => {
   try {
-    const pendingLeaves = await leaveApplication.find({ status: 'Pending' }).populate('faculty_id', 'name');
+    const pendingLeaves = await leaveApplication.find({ status: 'Pending' }).populate('faculty_id', 'fid name');
     res.json(pendingLeaves);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
