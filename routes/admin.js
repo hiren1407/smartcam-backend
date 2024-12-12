@@ -6,6 +6,33 @@ const facultyAttendance = require('../models/facultyAttendance');
 const leaveApplication = require('../models/leaveApplication');
 const { verifyToken, roleCheck } = require('../middlewares/authMiddleware');
 
+// Endpoint to show details on admin dashboard - faculties present, absent and on leave for today's date
+router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => {
+  try {
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+    // Fetch all faculties
+    const faculties = await User.find({ role: 'faculty' });
+
+    // Fetch attendance records for today
+    const attendanceRecords = await facultyAttendance.find({ attendanceDate: today });
+
+    
+
+    const presentFaculties = attendanceRecords.filter(record => record.facultyStatus === 'P').map(record => record.faculty_id);
+    const onLeaveFaculties = attendanceRecords.filter(record => record.facultyStatus === 'L').map(record => record.faculty_id);
+    const absentFaculties = faculties.filter(faculty => !presentFaculties.includes(faculty._id.toString()) && !onLeaveFaculties.includes(faculty._id.toString()));
+
+    res.json({
+      present: presentFaculties.length,
+      absent: absentFaculties.length,
+      onLeave: onLeaveFaculties.length
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Get all faculty details
 router.get('/faculty', verifyToken, roleCheck(['admin']), async (req, res) => {
   try {

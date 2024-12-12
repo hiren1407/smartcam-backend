@@ -88,7 +88,7 @@ router.put('/profile', verifyToken, roleCheck(['faculty']), async (req, res) => 
   }
 });
 
-// Get attendance for a particular faculty by their faculty_id
+// Get attendance and leave for a particular faculty by their faculty_id
 router.get('/:faculty_id/attendanceAndLeave', verifyToken, roleCheck(['faculty', 'admin']), async (req, res) => {
   try {
     const facultyId = req.params.faculty_id;
