@@ -72,16 +72,35 @@ router.delete('/faculty/:faculty_id', verifyToken, roleCheck(['admin']), async (
   }
 });
 
-// Get all pending leave applications
+// Get all pending leave applications with faculty names
 router.get('/leave/pending', verifyToken, roleCheck(['admin']), async (req, res) => {
-    try {
-      const pendingLeaves = await leaveApplication.find({ status: 'Pending' });
-      res.json(pendingLeaves);
-    } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
-    }
-  });
+  try {
+    // Fetch pending leave applications
+    const pendingLeaves = await leaveApplication.find({ status: 'Pending' });
 
+    // Extract faculty IDs from pending leave applications
+    const facultyIds = pendingLeaves.map(leave => leave.faculty_id);
+
+    // Fetch user details for the faculty members
+    const facultyDetails = await User.find({ _id: { $in: facultyIds } }, 'fid name');
+
+    // Create a map of faculty details
+    const facultyMap = facultyDetails.reduce((map, faculty) => {
+      map[faculty._id] = faculty;
+      return map;
+    }, {});
+
+    // Combine leave application data with faculty details
+    const result = pendingLeaves.map(leave => ({
+      ...leave.toObject(),
+      faculty: facultyMap[leave.faculty_id]
+    }));
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 // Approve or Deny leave request
 router.put('/leave/:leave_id', verifyToken, roleCheck(['admin']), async (req, res) => {
     try {
