@@ -21,7 +21,7 @@ router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => 
 
     const presentFaculties = attendanceRecords.filter(record => record.facultyStatus === 'P').map(record => record.faculty_id);
     const onLeaveFaculties = attendanceRecords.filter(record => record.facultyStatus === 'L').map(record => record.faculty_id);
-    const absentFaculties = faculties.filter(faculty => !presentFaculties.includes(faculty._id.toString()) && !onLeaveFaculties.includes(faculty._id.toString()));
+    const absentFaculties = faculties.filter(faculty => !presentFaculties.includes(faculty_id.toString()) && !onLeaveFaculties.includes(faculty_id.toString()));
 
     res.json({
       present: presentFaculties.length,
