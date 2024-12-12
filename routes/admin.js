@@ -86,7 +86,7 @@ router.get('/leave/pending', verifyToken, roleCheck(['admin']), async (req, res)
 
     // Create a map of faculty details
     const facultyMap = facultyDetails.reduce((map, faculty) => {
-      map[faculty._id] = faculty;
+      map[faculty.fid] = faculty;
       return map;
     }, {});
 
