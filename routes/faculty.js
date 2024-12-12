@@ -118,10 +118,8 @@ router.get('/:faculty_id/attendanceAndLeave', verifyToken, roleCheck(['faculty',
     const facultyId = req.params.faculty_id;
 
     // Query for finding attendance and leave records for the given faculty_id
-    const attendanceRecords = await facultyAttendance.find({ faculty_id: facultyId });
-
-    const leaveDetails = await leaveApplication.find({ faculty_id: facultyId });
-
+    const attendanceRecords = await facultyAttendance.find({ faculty_id: facultyId }).sort({ attendanceDate: -1 });
+    const leaveDetails = await leaveApplication.find({ faculty_id: facultyId }).sort({ fromDate: -1 });
 
     res.json({
       attendanceRecords,
@@ -131,6 +129,7 @@ router.get('/:faculty_id/attendanceAndLeave', verifyToken, roleCheck(['faculty',
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
 
 // Apply for leave
 router.post('/leave', verifyToken, roleCheck(['faculty']), async (req, res) => {

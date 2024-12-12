@@ -39,7 +39,7 @@ router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => 
 // Get all faculty details
 router.get('/faculty', verifyToken, roleCheck(['admin']), async (req, res) => {
   try {
-    const faculties = await User.find({ role: 'faculty' }); // Fetch all users with the role of 'faculty'
+    const faculties = await User.find({ role: 'faculty' }).sort({ name: 1 }); // Fetch all users with the role of 'faculty' and sort by name
     res.json(faculties);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -74,13 +74,13 @@ router.delete('/faculty/:faculty_id', verifyToken, roleCheck(['admin']), async (
 
 // Get all pending leave applications
 router.get('/leave/pending', verifyToken, roleCheck(['admin']), async (req, res) => {
-    try {
-      const pendingLeaves = await leaveApplication.find({ status: 'Pending' });
-      res.json(pendingLeaves);
-    } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
-    }
-  });
+  try {
+    const pendingLeaves = await leaveApplication.find({ status: 'Pending' }).populate('faculty_id', 'name');
+    res.json(pendingLeaves);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 
 // Approve or Deny leave request
 router.put('/leave/:leave_id', verifyToken, roleCheck(['admin']), async (req, res) => {
