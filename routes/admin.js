@@ -82,7 +82,7 @@ router.get('/leave/pending', verifyToken, roleCheck(['admin']), async (req, res)
     const facultyIds = pendingLeaves.map(leave => leave.faculty_id);
 
     // Fetch user details for the faculty members
-    const facultyDetails = await User.find({ _id: { $in: facultyIds } }, 'fid name');
+    const facultyDetails = await User.find({ fid: { $in: facultyIds } }, 'fid name');
 
     // Create a map of faculty details
     const facultyMap = facultyDetails.reduce((map, faculty) => {
