@@ -27,6 +27,7 @@ router.post("/register", async (req, res) => {
         gender: req.body.gender,
         dob: req.body.dob,
         phone: req.body.phone,
+        facialEncoding:[]
        
       });
 

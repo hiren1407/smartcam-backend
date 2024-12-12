@@ -10,6 +10,7 @@ const userSchema = new Schema({
   dob:{type:String},
   fid:{type:String},
   phone:{type:String},
+  facialEncoding:{type:Array}
   
   
    
