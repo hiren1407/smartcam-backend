@@ -17,6 +17,8 @@ router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => 
     // Fetch attendance records for today
     const attendanceRecords = await facultyAttendance.find({ attendanceDate: today });
 
+    // Fetch pending leave applications
+    const pendingLeaveApplications = await leaveApplication.find({ status: 'Pending' });
     
 
     const presentFaculties = attendanceRecords.filter(record => record.facultyStatus === 'P').map(record => record.faculty_id);
@@ -26,7 +28,8 @@ router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => 
     res.json({
       present: presentFaculties.length,
       absent: absentFaculties.length,
-      onLeave: onLeaveFaculties.length
+      onLeave: onLeaveFaculties.length,
+      pendingLeaves: pendingLeaveApplications.length
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

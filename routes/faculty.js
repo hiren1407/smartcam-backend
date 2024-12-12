@@ -63,7 +63,7 @@ router.get('/profile', verifyToken, roleCheck(['faculty']), async (req, res) => 
 router.put('/profile', verifyToken, roleCheck(['faculty']), async (req, res) => {
   try {
     // Extract fields to update from the request body
-    const { email, phone, dob, gender } = req.body;
+    const { phone } = req.body;
 
     // Find the logged-in user by their ID and role
     const facultyProfile = await User.findOne({ fid: req.user.id, role: 'faculty' });
@@ -73,16 +73,40 @@ router.put('/profile', verifyToken, roleCheck(['faculty']), async (req, res) => 
     }
 
     // Update fields only if they are provided in the request
-    if (email) facultyProfile.email = email;
+   
     
     if (phone) facultyProfile.phone = phone;
-    if (dob) facultyProfile.dob = dob;
-    if (gender) facultyProfile.gender = gender;
+    
 
     // Save the updated profile
     await facultyProfile.save();
 
     res.json({ message: 'Profile updated successfully', facultyProfile });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Endpoint to change password
+router.post('/changePassword', verifyToken, roleCheck(['faculty']), async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+
+    // Find the logged-in user by their ID and role
+    const facultyProfile = await User.findOne({ fid: req.user.id, role: 'faculty' });
+
+    if (!facultyProfile) {
+      return res.status(404).json({ message: 'Faculty profile not found' });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    facultyProfile.password = await bcrypt.hash(newPassword, salt);
+
+    // Save the updated profile
+    await facultyProfile.save();
+
+    res.json({ message: 'Password changed successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
