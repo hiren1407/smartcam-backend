@@ -117,9 +117,12 @@ router.get('/:faculty_id/attendanceAndLeave', verifyToken, roleCheck(['faculty',
   try {
     const facultyId = req.params.faculty_id;
 
+    // Convert facultyId to ObjectId
+    const objectId = mongoose.Types.ObjectId(facultyId);
+
     // Query for finding attendance and leave records for the given faculty_id
-    const attendanceRecords = await facultyAttendance.find({ faculty_id: facultyId }).sort({ attendanceDate: -1 });
-    const leaveDetails = await leaveApplication.find({ faculty_id: facultyId }).sort({ fromDate: -1 });
+    const attendanceRecords = await facultyAttendance.find({ faculty_id: objectId }).sort({ attendanceDate: -1 });
+    const leaveDetails = await leaveApplication.find({ faculty_id: objectId }).sort({ fromDate: -1 });
 
     res.json({
       attendanceRecords,
