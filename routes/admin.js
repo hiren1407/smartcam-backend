@@ -70,14 +70,14 @@ router.delete('/faculty/:faculty_id', verifyToken, roleCheck(['admin']), async (
     const facultyId = req.params.faculty_id;
 
     // Find the faculty user by their ID and role
-    const faculty = await User.findOne({ _id: facultyId, role: 'faculty' });
+    const faculty = await User.findOne({ fid: facultyId, role: 'faculty' });
 
     if (!faculty) {
       return res.status(404).json({ message: 'Faculty not found' });
     }
 
     // Delete the faculty user
-    await User.deleteOne({ _id: facultyId, role: 'faculty' });
+    await User.deleteOne({ fid: facultyId, role: 'faculty' });
 
     // Optionally, delete related faculty attendance and leave records
     await facultyAttendance.deleteMany({ faculty_id: facultyId });
