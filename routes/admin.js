@@ -9,7 +9,7 @@ const { verifyToken, roleCheck } = require('../middlewares/authMiddleware');
 // Endpoint to show details on admin dashboard - faculties present, absent and on leave for today's date
 router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => {
   try {
-    const today = new Date().toLocalString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    const today = new Date().toLocaleDateString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
     // Fetch all faculties
     const faculties = await User.find({ role: 'faculty' });
@@ -151,7 +151,7 @@ router.put('/leave/:leave_id', verifyToken, roleCheck(['admin']), async (req, re
   
         // Loop through each date between fromDate and toDate
         for (let date = fromDate; date <= toDate; date.setDate(date.getDate() + 1)) {
-          const attendanceDate = date.toLocalString().split('T')[0];  // Convert to YYYY-MM-DD
+          const attendanceDate = date.toLocaleDateString().split('T')[0];  // Convert to YYYY-MM-DD
   
           // Update the faculty's attendance status to 'L' for each leave date
           const res = await facultyAttendance.updateOne(
