@@ -10,12 +10,14 @@ const { verifyToken, roleCheck } = require('../middlewares/authMiddleware');
 router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => {
   try {
     const today = new Date().toLocaleDateString('en-CA').split('T')[0]; // Get today's date in YYYY-MM-DD format
+    console.log(today)
 
     // Fetch all faculties
     const faculties = await User.find({ role: 'faculty' });
 
     // Fetch attendance records for today
     const attendanceRecords = await facultyAttendance.find({ attendanceDate: today });
+    console.log(attendanceRecords)
 
     // Fetch pending leave applications
     const pendingLeaveApplications = await leaveApplication.find({ status: 'Pending' });
@@ -24,6 +26,7 @@ router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => 
     const presentFaculties = attendanceRecords.filter(record => record.facultyStatus === 'P').map(record => record.faculty_id);
     const onLeaveFaculties = attendanceRecords.filter(record => record.facultyStatus === 'L').map(record => record.faculty_id);
     const absentFaculties = faculties.filter(faculty => !presentFaculties.includes(faculty.fid.toString()) && !onLeaveFaculties.includes(faculty.fid.toString()));
+    
 
     res.json({
       present: presentFaculties.length,
