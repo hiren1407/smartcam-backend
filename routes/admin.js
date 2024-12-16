@@ -10,14 +10,14 @@ const { verifyToken, roleCheck } = require('../middlewares/authMiddleware');
 router.get('/dashboard', verifyToken, roleCheck(['admin']), async (req, res) => {
   try {
     const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); // Get today's date in YYYY-MM-DD format
-    console.log(today)
+    
 
     // Fetch all faculties
     const faculties = await User.find({ role: 'faculty' });
 
     // Fetch attendance records for today
     const attendanceRecords = await facultyAttendance.find({ attendanceDate: today });
-    console.log(attendanceRecords)
+    
 
     // Fetch pending leave applications
     const pendingLeaveApplications = await leaveApplication.find({ status: 'Pending' });

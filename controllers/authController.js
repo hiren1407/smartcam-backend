@@ -4,7 +4,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const {token, user} = await authService.login(email, password);
-    console.log(token)
+    
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
       httpOnly: true,
